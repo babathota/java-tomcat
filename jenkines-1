@@ -1,10 +1,11 @@
 pipeline {
     agent { label 'wsl' } 
-
+    /*
     environment {
         // The ID of the credential you saved in Jenkins
         SONAR_AUTH_TOKEN = credentials('my-sonar-token') 
     }
+    */
 
     stages {
         // Stage 1: Checkout Code
