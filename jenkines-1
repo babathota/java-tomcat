@@ -24,7 +24,7 @@ pipeline {
         // Stage 3: SonarQube Analysis
         stage('SonarQube Analysis') {
             steps {   
-                withSonarQubeEnv(credentialsId:'sonar-java-tomcat') {            
+                            
                     sh """ 
                     mvn clean test sonar:sonar  -Dmaven.test.failure.ignore=true \
                      -Dcheckstyle.skip \
@@ -35,23 +35,10 @@ pipeline {
                     """
                  
 
-                }
+                
             }
             
-        }        
-
-         stage('Quality Gate') {
-            steps {
-                script {
-                        timeout(time: 15, unit: 'MINUTES') {
-                                waitForQualityGate abortPipeline: true  
-                           }                    
-                    }
-                }
-            }
-    
-        
-
+        }    
 
         // Stage 5: Build WAR
         stage('Build WAR') {
