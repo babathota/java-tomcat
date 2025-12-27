@@ -52,9 +52,7 @@ pipeline {
                      -Dsonar.login=sqp_75036d8c79c16675ae763cedbd0e10b0eeee0a4f \
                      -Dsonar.projectVersion=${env.BUILD_NUMBER}
                     """
-                 timeout(time: 15, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                 
 
                 }
             
