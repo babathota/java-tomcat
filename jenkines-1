@@ -23,27 +23,8 @@ pipeline {
         
         // Stage 3: SonarQube Analysis
         stage('SonarQube Analysis') {
-            steps {
-                // This block connects to the "sonar-docker" config we made earlier
-                
-                    // The magic command. It pushes code to your Docker SonarQube.
-                    // -Dsonar.projectKey = unique name for this project in Sonar
-                    /*
-                    sh """
-                      mvn sonar:sonar \
-                      -Dsonar.projectKey=my-java-webapp \
-                      -Dsonar.host.url=https://192.168.1.50:9000 \
-                      -Dsonar.login=$SONAR_AUTH_TOKEN
-                    """
-                    
-                    sh """ 
-                    mvn clean verify sonar:sonar  -Dmaven.test.failure.ignore=true \
-                     -Dsonar.projectKey=java-test \
-                     -Dsonar.host.url=http://172.29.147.94:9000 \
-                     -Dsonar.login=sqp_75036d8c79c16675ae763cedbd0e10b0eeee0a4f \
-                     -Dsonar.projectVersion=${env.BUILD_NUMBER}
-                    """
-                    */
+            steps {   
+                withSonarQubeEnv('sonar-java-tomcat') {            
                     sh """ 
                     mvn clean test sonar:sonar  -Dmaven.test.failure.ignore=true \
                      -Dcheckstyle.skip \
@@ -55,6 +36,7 @@ pipeline {
                  
 
                 }
+            }
             
         }        
 
