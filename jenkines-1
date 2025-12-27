@@ -24,7 +24,7 @@ pipeline {
         // Stage 3: SonarQube Analysis
         stage('SonarQube Analysis') {
             steps {   
-                withSonarQubeEnv('sonar-java-tomcat') {            
+                withSonarQubeEnv(credentialsId:'sonar-java-tomcat') {            
                     sh """ 
                     mvn clean test sonar:sonar  -Dmaven.test.failure.ignore=true \
                      -Dcheckstyle.skip \
