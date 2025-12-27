@@ -45,7 +45,7 @@ pipeline {
                     """
                     */
                     sh """ 
-                    mvn clean verify sonar:sonar  -Dmaven.test.failure.ignore=true \
+                    mvn clean test sonar:sonar  -Dmaven.test.failure.ignore=true \
                      -Dcheckstyle.skip \
                      -Dsonar.projectKey=java-test \
                      -Dsonar.host.url=http://localhost:9000 \
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 echo 'Building the WAR file...'
                 // -DskipTests because we already ran tests in Stage 2
-                sh 'mvn clean package -DskipTests -Dcheckstyle.skip'
+                sh 'mvn package -DskipTests -Dcheckstyle.skip'
             }
             post {
                 success {
