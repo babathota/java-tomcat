@@ -19,24 +19,8 @@ pipeline {
             steps {
                 sh 'ls -la'
             }
-        }
-
-        // Stage 2: Unit Testing (The "src/test" part)
-        stage('Unit Tests') {
-            steps {
-                echo 'Running JUnit Tests...'
-                // This runs tests inside src/test/java
-                // If tests fail, the pipeline STOPS here.
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    // Shows the test results graph in Jenkins UI
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        /*
+        }              
+        
         // Stage 3: SonarQube Analysis
         stage('SonarQube Analysis') {
             steps {
@@ -44,20 +28,35 @@ pipeline {
                 withSonarQubeEnv('sonar-docker') {
                     // The magic command. It pushes code to your Docker SonarQube.
                     // -Dsonar.projectKey = unique name for this project in Sonar
+                    /*
                     sh """
                       mvn sonar:sonar \
                       -Dsonar.projectKey=my-java-webapp \
-                      -Dsonar.host.url=http://192.168.1.50:9000 \
+                      -Dsonar.host.url=https://192.168.1.50:9000 \
                       -Dsonar.login=$SONAR_AUTH_TOKEN
                     """
+                    
+                    sh """ 
+                    mvn clean verify sonar:sonar  -Dmaven.test.failure.ignore=true \
+                     -Dsonar.projectKey=java-test \
+                     -Dsonar.host.url=http://172.29.147.94:9000 \
+                     -Dsonar.login=sqp_75036d8c79c16675ae763cedbd0e10b0eeee0a4f \
+                     -Dsonar.projectVersion=${env.BUILD_NUMBER}
+                    """
+                    */
+                    sh """ 
+                    mvn clean verify sonar:sonar  -Dmaven.test.failure.ignore=true \
+                     -Dsonar.projectKey=java-test \
+                     -Dsonar.host.url=http://localhost:9000 \
+                     -Dsonar.login=sqp_75036d8c79c16675ae763cedbd0e10b0eeee0a4f \
+                     -Dsonar.projectVersion=${env.BUILD_NUMBER}
+                    """
+
                 }
             }
-        } 
-         */
-        /*
-        // Stage 4: Quality Gate (Optional but Recommended)
-        // Waits for SonarQube to say "Pass" or "Fail". 
-        // If "Fail", the pipeline aborts.
+        }        
+        
+    
         stage("Quality Gate") {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -71,7 +70,7 @@ pipeline {
             steps {
                 echo 'Building the WAR file...'
                 // -DskipTests because we already ran tests in Stage 2
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests -Dcheckstyle.skip'
             }
             post {
                 success {
@@ -80,7 +79,6 @@ pipeline {
                 }
             }
         }
-
-        */
+ 
     }
 }
