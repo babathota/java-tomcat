@@ -25,7 +25,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // This block connects to the "sonar-docker" config we made earlier
-                withSonarQubeEnv('sonar-docker') {
+                
                     // The magic command. It pushes code to your Docker SonarQube.
                     // -Dsonar.projectKey = unique name for this project in Sonar
                     /*
@@ -53,7 +53,7 @@ pipeline {
                     """
 
                 }
-            }
+            
         }        
         
     
