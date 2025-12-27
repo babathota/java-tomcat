@@ -15,8 +15,6 @@
 
   <name>petclinic</name>
 
-  <packaging>war</packaging>
-
   <properties>
 
     <!-- Generic properties -->
@@ -58,11 +56,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -235,7 +228,7 @@
             <!-- Spring Boot Actuator displays build-related information
               if a META-INF/build-info.properties file is present -->
             <goals>
-              <goal>repackage</goal>
+              <goal>build-info</goal>
             </goals>
             <configuration>
               <additionalProperties>
