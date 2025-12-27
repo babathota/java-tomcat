@@ -1,0 +1,85 @@
+pipeline {
+    agent { label 'wsl' } 
+
+    environment {
+        // The ID of the credential you saved in Jenkins
+        SONAR_AUTH_TOKEN = credentials('my-sonar-token') 
+    }
+
+    stages {
+        // Stage 1: Checkout Code
+        stage('Checkout') {
+            steps {
+                Checkout scm
+            }
+        }
+
+        stage('ls'){
+            steps {
+                sh 'ls -la'
+            }
+        }
+
+        // Stage 2: Unit Testing (The "src/test" part)
+        stage('Unit Tests') {
+            steps {
+                echo 'Running JUnit Tests...'
+                // This runs tests inside src/test/java
+                // If tests fail, the pipeline STOPS here.
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    // Shows the test results graph in Jenkins UI
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        /*
+        // Stage 3: SonarQube Analysis
+        stage('SonarQube Analysis') {
+            steps {
+                // This block connects to the "sonar-docker" config we made earlier
+                withSonarQubeEnv('sonar-docker') {
+                    // The magic command. It pushes code to your Docker SonarQube.
+                    // -Dsonar.projectKey = unique name for this project in Sonar
+                    sh """
+                      mvn sonar:sonar \
+                      -Dsonar.projectKey=my-java-webapp \
+                      -Dsonar.host.url=http://192.168.1.50:9000 \
+                      -Dsonar.login=$SONAR_AUTH_TOKEN
+                    """
+                }
+            }
+        } 
+         */
+        /*
+        // Stage 4: Quality Gate (Optional but Recommended)
+        // Waits for SonarQube to say "Pass" or "Fail". 
+        // If "Fail", the pipeline aborts.
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        // Stage 5: Build WAR
+        stage('Build WAR') {
+            steps {
+                echo 'Building the WAR file...'
+                // -DskipTests because we already ran tests in Stage 2
+                sh 'mvn clean package -DskipTests'
+            }
+            post {
+                success {
+                    // Saves the WAR file so you can download it from Jenkins
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
+            }
+        }
+
+        */
+    }
+}
